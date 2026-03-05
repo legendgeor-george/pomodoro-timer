@@ -17,7 +17,9 @@ export default function SessionInfo({ completedPomodoros, totalRequired }: Sessi
           <div
             key={index}
             className={`w-4 h-4 rounded-full ${
-              index < completedPomodoros % totalRequired
+              index < (completedPomodoros % totalRequired === 0 && completedPomodoros > 0
+                ? totalRequired
+                : completedPomodoros % totalRequired)
                 ? 'bg-rose-500'
                 : 'bg-gray-300'
             }`}

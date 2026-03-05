@@ -1,5 +1,9 @@
 let audioContext: AudioContext | null = null;
 
+export const resetAudioContext = () => {
+  audioContext = null;
+};
+
 export const playNotificationSound = () => {
   try {
     if (!audioContext) {

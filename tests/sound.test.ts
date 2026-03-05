@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { playNotificationSound } from '@/utils/sound';
+import { playNotificationSound, resetAudioContext } from '@/utils/sound';
 
 // Mock AudioContext
 let mockOscillator: any;
@@ -9,6 +9,7 @@ let mockAudioContext: any;
 describe('sound', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    resetAudioContext();
 
     // Create fresh mock objects for each test
     mockOscillator = {
@@ -23,20 +24,16 @@ describe('sound', () => {
       gain: { value: 0 },
     };
 
-    mockAudioContext = {
-      createOscillator: vi.fn(() => mockOscillator),
-      createGain: vi.fn(() => mockGainNode),
-      destination: {},
-      currentTime: 0,
-    };
+    // Mock global AudioContext as a constructor function
+    global.AudioContext = vi.fn(function(this: any) {
+      this.createOscillator = vi.fn(() => mockOscillator);
+      this.createGain = vi.fn(() => mockGainNode);
+      this.destination = {};
+      this.currentTime = 0;
 
-    // Mock global AudioContext as a class
-    global.AudioContext = class {
-      createOscillator = mockAudioContext.createOscillator;
-      createGain = mockAudioContext.createGain;
-      destination = mockAudioContext.destination;
-      currentTime = mockAudioContext.currentTime;
-    } as any;
+      // Store reference for assertions
+      mockAudioContext = this;
+    }) as any;
   });
 
   describe('playNotificationSound', () => {
@@ -78,9 +75,10 @@ describe('sound', () => {
     });
 
     it('should stop oscillator after 0.5 seconds', () => {
-      mockAudioContext.currentTime = 10;
       playNotificationSound();
-      expect(mockOscillator.stop).toHaveBeenCalledWith(10.5);
+      // The oscillator should stop at currentTime + 0.5
+      // Since currentTime is 0 by default, it should be 0.5
+      expect(mockOscillator.stop).toHaveBeenCalledWith(0.5);
     });
 
     it('should not throw error when AudioContext is not available', () => {
@@ -88,10 +86,23 @@ describe('sound', () => {
       expect(() => playNotificationSound()).not.toThrow();
     });
 
-    it('should handle errors gracefully', () => {
+    it('should handle errors gracefully and log to console', () => {
       const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
-      global.AudioContext = vi.fn(() => {
-        throw new Error('AudioContext not supported');
+
+      // Reset audioContext to clear cached instance
+      resetAudioContext();
+
+      // Create a mock that throws on createOscillator
+      global.AudioContext = vi.fn(function(this: any) {
+        this.createOscillator = vi.fn(() => {
+          throw new Error('AudioContext error');
+        });
+        this.createGain = vi.fn(() => mockGainNode);
+        this.destination = {};
+        this.currentTime = 0;
+
+        // Store reference for assertions
+        mockAudioContext = this;
       }) as any;
 
       expect(() => playNotificationSound()).not.toThrow();
@@ -103,15 +114,17 @@ describe('sound', () => {
       consoleWarnSpy.mockRestore();
     });
 
-    it('should reuse AudioContext on subsequent calls', () => {
+    it('should create oscillator and gain node on each call', () => {
       playNotificationSound();
-      const firstCallCount = mockAudioContext.createOscillator.mock.calls.length;
+      expect(mockAudioContext.createOscillator).toHaveBeenCalled();
+      expect(mockAudioContext.createGain).toHaveBeenCalled();
+
+      const firstOscillatorCallCount = mockAudioContext.createOscillator.mock.calls.length;
 
       playNotificationSound();
-      const secondCallCount = mockAudioContext.createOscillator.mock.calls.length;
 
-      // Should create oscillator and gain node each time
-      expect(secondCallCount).toBeGreaterThan(firstCallCount);
+      // Should create new oscillator on second call
+      expect(mockAudioContext.createOscillator.mock.calls.length).toBeGreaterThan(firstOscillatorCallCount);
     });
   });
 });

@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest';
-import { renderHook, act, waitFor } from '@testing-library/react';
+import { renderHook, act } from '@testing-library/react';
 import { useTimer } from '@/hooks/useTimer';
 import { TIMER_CONFIG } from '@/types/timer';
 import * as soundModule from '@/utils/sound';
@@ -88,7 +88,7 @@ describe('useTimer', () => {
     expect(result.current.isRunning).toBe(false);
   });
 
-  it('should countdown time when timer is running', async () => {
+  it('should countdown time when timer is running', () => {
     const { result } = renderHook(() => useTimer());
 
     const initialTime = result.current.timeLeft;
@@ -101,12 +101,10 @@ describe('useTimer', () => {
       vi.advanceTimersByTime(2000);
     });
 
-    await waitFor(() => {
-      expect(result.current.timeLeft).toBeLessThan(initialTime);
-    }, { timeout: 3000 });
+    expect(result.current.timeLeft).toBeLessThan(initialTime);
   });
 
-  it('should play sound and switch mode when timer reaches zero', async () => {
+  it('should play sound and switch mode when timer reaches zero', () => {
     const { result } = renderHook(() => useTimer());
 
     // Set initial mode to work
@@ -121,16 +119,13 @@ describe('useTimer', () => {
       vi.advanceTimersByTime(TIMER_CONFIG.work * 1000 + 2000);
     });
 
-    await waitFor(() => {
-      expect(soundModule.playNotificationSound).toHaveBeenCalled();
-    }, { timeout: 5000 });
-
+    expect(soundModule.playNotificationSound).toHaveBeenCalled();
     expect(result.current.isRunning).toBe(false);
     expect(result.current.mode).toBe('break');
     expect(result.current.timeLeft).toBe(TIMER_CONFIG.break);
   });
 
-  it('should switch from break to work when break timer completes', async () => {
+  it('should switch from break to work when break timer completes', () => {
     const { result } = renderHook(() => useTimer());
 
     // Switch to break mode first
@@ -149,14 +144,11 @@ describe('useTimer', () => {
       vi.advanceTimersByTime(TIMER_CONFIG.break * 1000 + 2000);
     });
 
-    await waitFor(() => {
-      expect(result.current.mode).toBe('work');
-    }, { timeout: 5000 });
-
+    expect(result.current.mode).toBe('work');
     expect(result.current.timeLeft).toBe(TIMER_CONFIG.work);
   });
 
-  it('should not countdown when timer is paused', async () => {
+  it('should not countdown when timer is paused', () => {
     const { result } = renderHook(() => useTimer());
 
     act(() => {
