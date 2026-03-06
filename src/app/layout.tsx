@@ -1,9 +1,12 @@
 import type { Metadata } from 'next'
+import { Inter } from 'next/font/google'
 import './globals.css'
+
+const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
   title: 'Pomodoro Timer',
-  description: '25分作業 + 5分休憩のポモドーロタイマー',
+  description: 'A simple and effective Pomodoro timer to boost your productivity',
 }
 
 export default function RootLayout({
@@ -12,10 +15,8 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="ja">
-      <body className="bg-gradient-to-br from-red-50 to-orange-50 min-h-screen">
-        {children}
-      </body>
+    <html lang="en">
+      <body className={inter.className}>{children}</body>
     </html>
   )
 }

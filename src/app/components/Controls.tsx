@@ -1,53 +1,36 @@
 'use client'
 
-type TimerStatus = 'idle' | 'running' | 'paused'
-
 interface ControlsProps {
-  status: TimerStatus
+  isRunning: boolean
   onStart: () => void
   onPause: () => void
   onReset: () => void
-  onSkip?: () => void
 }
 
-export default function Controls({ status, onStart, onPause, onReset, onSkip }: ControlsProps) {
+export default function Controls({ isRunning, onStart, onPause, onReset }: ControlsProps) {
   return (
-    <div className="flex gap-4 flex-wrap justify-center">
-      {status === 'idle' || status === 'paused' ? (
+    <div className="flex gap-4 justify-center">
+      {!isRunning ? (
         <button
           onClick={onStart}
-          className="px-8 py-3 rounded-lg font-semibold text-white bg-blue-600 hover:bg-blue-700 shadow-lg hover:shadow-xl transition-all"
-          aria-label="開始"
+          className="px-6 py-3 bg-green-500 hover:opacity-90 rounded-lg font-semibold text-white transition-opacity"
         >
-          {status === 'idle' ? '開始' : '再開'}
+          Start
         </button>
       ) : (
         <button
           onClick={onPause}
-          className="px-8 py-3 rounded-lg font-semibold text-white bg-yellow-500 hover:bg-yellow-600 shadow-lg hover:shadow-xl transition-all"
-          aria-label="一時停止"
+          className="px-6 py-3 bg-yellow-500 hover:opacity-90 rounded-lg font-semibold text-white transition-opacity"
         >
-          一時停止
+          Pause
         </button>
       )}
-
       <button
         onClick={onReset}
-        className="px-6 py-3 rounded-lg font-semibold text-white bg-gray-600 hover:bg-gray-700 shadow-lg hover:shadow-xl transition-all"
-        aria-label="リセット"
+        className="px-6 py-3 bg-gray-500 hover:opacity-90 rounded-lg font-semibold text-white transition-opacity"
       >
-        リセット
+        Reset
       </button>
-
-      {onSkip && (
-        <button
-          onClick={onSkip}
-          className="px-6 py-3 rounded-lg font-semibold text-white bg-purple-600 hover:bg-purple-700 shadow-lg hover:shadow-xl transition-all"
-          aria-label="スキップ"
-        >
-          スキップ
-        </button>
-      )}
     </div>
   )
 }
