@@ -1,22 +1,19 @@
-import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
-import './globals.css'
-
-const inter = Inter({ subsets: ['latin'] })
+import type { Metadata } from 'next';
+import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'Pomodoro Timer',
-  description: 'A simple and effective Pomodoro timer to boost your productivity',
-}
+  title: 'ポモドーロタイマー',
+  description: '集中力を高める時間管理ツール',
+};
 
 export default function RootLayout({
   children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body className={inter.className}>{children}</body>
+    <html lang="ja">
+      <body>{children}</body>
     </html>
-  )
+  );
 }

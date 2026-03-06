@@ -1,75 +1,106 @@
-# Pomodoro Timer
+# ポモドーロタイマー
 
-A simple and elegant Pomodoro timer built with Next.js to help you stay focused and productive.
+集中力を高め、生産性を向上させるためのシンプルで美しいポモドーロタイマーアプリケーションです。
 
-## What is this?
+## これは何ですか？
 
-This is a timer that helps you work in focused blocks of time. Work for 25 minutes, then take a 5-minute break. The timer automatically switches between work and break periods, playing a sound when it's time to switch.
+ポモドーロテクニックを実践するためのタイマーです。25分間集中して作業し、5分間休憩するサイクルを繰り返します。4回の作業サイクルの後は、15分間の長い休憩が自動的に設定されます。
 
-## Features
+## 主な機能
 
-- **25-minute work sessions** - Stay focused on one task
-- **5-minute breaks** - Rest and recharge
-- **Automatic switching** - Timer switches between work and break automatically
-- **Sound notifications** - Get notified when it's time to switch
-- **Simple controls** - Start, pause, and reset with one click
-- **Mode switching** - Manually switch between work and break modes
+- **25分の作業セッション** - 一つのタスクに集中
+- **5分の短い休憩** - リフレッシュして次の作業に備える
+- **15分の長い休憩** - 4サイクルごとに自動的に設定
+- **自動切り替え** - 作業と休憩を自動的に切り替え
+- **音声通知** - 切り替えのタイミングを音でお知らせ
+- **視覚的なプログレス表示** - 円形のプログレスバーで進捗を視覚化
+- **サイクルカウンター** - 完了した作業サイクルを🍅で表示
+- **シンプルな操作** - 開始、一時停止、リセット、スキップのボタンで簡単操作
 
-## Getting Started
+## はじめ方
 
-### Installation
+### インストール
 
 ```bash
 npm install
 ```
 
-### Running the App
+### 開発サーバーの起動
 
 ```bash
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) in your browser.
+ブラウザで [http://localhost:3000](http://localhost:3000) を開いてください。
 
-### Building for Production
+### テストの実行
+
+```bash
+# 一度だけテストを実行
+npm test
+
+# テストをウォッチモードで実行
+npm run test:watch
+```
+
+### 本番環境用のビルド
 
 ```bash
 npm run build
 npm start
 ```
 
-## How to Use
+## 使い方
 
-1. **Click Start** to begin a 25-minute work session
-2. **Focus on your work** until you hear the notification sound
-3. **Take a 5-minute break** when the timer switches automatically
-4. **Repeat** the cycle to stay productive
+1. **「開始」ボタンをクリック** - 25分の作業セッションを開始
+2. **作業に集中** - 通知音が鳴るまで集中
+3. **休憩を取る** - タイマーが自動的に休憩時間に切り替わります
+4. **サイクルを繰り返す** - 生産性を維持
 
-### Controls
+### 操作ボタン
 
-- **Start** - Begin the timer
-- **Pause** - Temporarily stop the timer
-- **Reset** - Reset the current session to its starting time
-- **Work/Break buttons** - Switch modes manually
+- **開始** - タイマーを開始
+- **一時停止** - タイマーを一時的に停止
+- **リセット** - 現在のセッションを開始時間にリセット
+- **スキップ** - 次のモード（作業/休憩）にスキップ
 
-## Technology Stack
+## 技術スタック
 
-- Next.js 15
-- React 19
-- TypeScript
-- Tailwind CSS
+- **Next.js 14.2.5** - Reactフレームワーク
+- **React 18.3.1** - UIライブラリ
+- **TypeScript** - 型安全性
+- **Tailwind CSS** - スタイリング
+- **Vitest** - テストフレームワーク
 
-## Project Structure
+## プロジェクト構造
 
 ```
 src/
-├── app/              # Next.js app pages
-├── components/       # React components (Timer, Controls, etc.)
-├── hooks/           # Custom React hooks (useTimer)
-├── types/           # TypeScript type definitions
-└── utils/           # Utility functions (sound notifications)
+├── app/              # Next.jsアプリケーションページ
+│   ├── page.tsx     # メインページ
+│   ├── layout.tsx   # レイアウト
+│   └── globals.css  # グローバルスタイル
+├── components/       # Reactコンポーネント
+│   ├── Timer.tsx           # メインタイマーコンポーネント
+│   ├── ProgressCircle.tsx  # 円形プログレスバー
+│   └── Stats.tsx           # サイクルカウンター
+├── hooks/           # カスタムReactフック
+│   └── usePomodoro.ts      # ポモドーロロジック
+└── types/           # TypeScript型定義
+    └── pomodoro.ts         # タイマー関連の型
+tests/
+├── Timer.test.tsx          # タイマーコンポーネントのテスト
+└── useTimer.test.ts        # カスタムフックのテスト
 ```
 
-## License
+## タイマーの動作
 
-Private project - not for public distribution.
+- **作業モード**: 25分（1500秒）
+- **短い休憩**: 5分（300秒）
+- **長い休憩**: 15分（900秒）
+
+作業セッションを4回完了するごとに、長い休憩が自動的に設定されます。
+
+## ライセンス
+
+プライベートプロジェクト - 公開配布不可

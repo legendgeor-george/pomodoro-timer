@@ -1,0 +1,8 @@
+notification.mp3 placeholder
+
+To add a notification sound:
+1. Download a free sound file from freesound.org or similar
+2. Save it as notification.mp3 in this directory
+3. The app will automatically use it
+
+If no notification.mp3 is present, the app falls back to a browser-generated beep sound using Web Audio API.
